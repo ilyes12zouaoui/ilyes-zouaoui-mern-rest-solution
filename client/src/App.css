@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
 }
 
 .App-logo {
@@ -17,6 +16,70 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+.footer-links-list {
+  margin: 0;
+  display: flex;
+  padding-right: 10px;
+}
+
+.footer-links-item {
+  list-style: none;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+footer {
+  background-color: #505050;
+  display: flex;
+  justify-content: space-between;
+}
+.footer-created-by {
+  display: flex;
+  align-items: center;
+  color: white;
+  padding-left: 10px;
+  text-align: center;
+}
+
+.footer-icon-container {
+  border-radius: 10px;
+  background-color: white;
+  font-size: 13px;
+  width: 22px;
+  height: 22px;
+}
+.footer-icon {
+  margin-left: -0.5px;
+  margin-top: -2px;
+}
+.fa-facebook {
+  color: #2953ff;
+  transition: 0.5s;
+}
+
+.fa-facebook:hover {
+  color: #5c74ff;
+}
+
+.fa-google-plus-square {
+  color: #ff2f2f;
+  transition: 0.5s;
+}
+
+.fa-google-plus-square:hover {
+  color: #ff5e5e;
+}
+
+.fa-linkedin {
+  color: #1d92ff;
+  transition: 0.5s;
+}
+
+.fa-linkedin:hover {
+  color: #6b99fc;
 }
 
 .App-link {

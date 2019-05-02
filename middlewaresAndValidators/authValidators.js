@@ -59,10 +59,7 @@ const signUpValidator = (req, res, next) => {
         }
       }),
     phoneNumber: Joi.number(),
-    school: Joi.string(),
-    city: Joi.string(),
-    country: Joi.string(),
-    birthDate: Joi.date()
+    birthDate: Joi.date().required()
   };
 
   const result = Joi.validate(req.body, schema, { abortEarly: false });

@@ -70,7 +70,17 @@ const signInController = async (req, res) => {
     return res
       .status(400)
       .send({ errors: { global: "wrong username or password" } });
-  } else if (!user.isActive) {
+  }
+
+  const compareResult = await user.comparePassword(req.body.password);
+
+  if (compareResult !== true) {
+    return res
+      .status(400)
+      .send({ errors: { global: "wrong username or password" } });
+  }
+
+  if (!user.isActive) {
     return res.status(400).send({
       errors: {
         global:
@@ -85,14 +95,6 @@ const signInController = async (req, res) => {
           "your account is banned contact our administration to release it"
       }
     });
-  }
-
-  const compareResult = await user.comparePassword(req.body.password);
-
-  if (compareResult !== true) {
-    return res
-      .status(400)
-      .send({ errors: { global: "wrong username or password" } });
   }
 
   user.isLoggedIn = true;
@@ -180,19 +182,19 @@ const resendAccountActivationEmailController = async (req, res) => {
     })
     .exec();
   if (!token) {
-    return res
-      .status(400)
-      .send({
-        errors: {
-          global:
-            "you have no account activation token, pls contact our administration"
-        }
-      });
+    return res.status(400).send({
+      errors: {
+        global:
+          "you have no account activation token, pls contact our administration"
+      }
+    });
   }
   sendEmail(user, token.token, keys.EMAIL.EMAIL_REASON.ACCOUNT_ACTIVATION);
 
   return res.send({
-    success: { global: "the activation e-mail was resent to " + user.email }
+    success: {
+      global: "the account activation e-mail was resent to " + user.email
+    }
   });
 };
 
