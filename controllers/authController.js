@@ -17,9 +17,9 @@ const forgotPassword = async (req, res) => {
   const user = await userModel.findOne({ email: req.body.email }).exec();
 
   if (!user) {
-    return res
-      .status(400)
-      .send({ error: { global: "no user was found for this email address" } });
+    return res.status(400).send({
+      errors: { global: "no user was found with this email address" }
+    });
   }
 
   let token = new tokenModel({
@@ -58,7 +58,7 @@ const resetPasswordController = async (req, res) => {
   await user.save();
   await token.remove();
   return res.send({
-    success: { global: "your password is reseted " }
+    success: { global: "your password was reseted succesfully" }
   });
 };
 
@@ -141,6 +141,7 @@ const signUpController = async (req, res) => {
     password: req.body.password,
     role: keys.USER_ROLES.SIMPLE,
     gender: req.body.gender,
+    birthDate: req.body.birthDate,
     ...(req.body.phoneNumber && { phoneNumber: req.body.phoneNumber })
   });
 
@@ -206,7 +207,9 @@ const accountActivationController = async (req, res) => {
     })
     .exec();
   if (!token) {
-    return res.status(400).send({ errors: { global: "wrong activation id" } });
+    return res
+      .status(400)
+      .send({ errors: { global: "wrong activation token" } });
   }
 
   await userModel
@@ -219,7 +222,7 @@ const accountActivationController = async (req, res) => {
     .exec();
   await token.remove();
   return res.send({
-    success: { global: "your account is now activated " }
+    success: { global: "your account is now activated please try to login" }
   });
 };
 

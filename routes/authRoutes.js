@@ -17,6 +17,10 @@ router.post(
 
 router.delete(
   "/signOut",
+  (req, res, next) => {
+    console.log("head :", req.headers);
+    next();
+  },
   authMiddleWares.authenticateAndLoadUser,
   authController.signOutController
 );

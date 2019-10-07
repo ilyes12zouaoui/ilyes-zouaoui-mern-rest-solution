@@ -18,6 +18,7 @@ const authenticateAndLoadUser = (req, res, next) => {
       return res.status(401).send({ errors: { message: "unauthorized" } });
 
     req.user = user;
+
     return next();
   })(req, res);
 };

@@ -29,21 +29,99 @@ class Header extends Component {
             </li>
           </ul> */}
           <ul class="navbar-nav ml-auto">
+            {/* always showen navigation */}
             <li class="nav-item">
               <NavLink className="nav-link" to="/">
                 home
               </NavLink>
             </li>
-            <li class="nav-item">
-              <NavLink className="nav-link" to="/signIn">
-                signIn
-              </NavLink>
-            </li>
-            <li class="nav-item">
-              <NavLink className="nav-link" to="/signUp">
-                signUp
-              </NavLink>
-            </li>
+
+            {/* if user is authenticated navigation  */}
+            {this.props.isAuthenticated && (
+              <React.Fragment>
+                {" "}
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdownMenuLink"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <img
+                      src={"/images/" + this.props.user.image}
+                      width="30"
+                      height="30"
+                      style={{ borderRadius: "50%" }}
+                    />
+                  </a>
+                  <div
+                    class="dropdown-menu dropdown-menu-right "
+                    aria-labelledby="navbarDropdownMenuLink"
+                  >
+                    <NavLink
+                      className="dropdown-item"
+                      activeClassName=""
+                      to="/profile"
+                    >
+                      profile
+                    </NavLink>
+
+                    <NavLink
+                      className="dropdown-item"
+                      activeClassName=""
+                      to="/updatePassword"
+                    >
+                      update password
+                    </NavLink>
+                    <NavLink
+                      className="dropdown-item"
+                      activeClassName=""
+                      to="/updateProfile"
+                    >
+                      update profile
+                    </NavLink>
+                    <NavLink
+                      className="dropdown-item"
+                      onClick={this.props.logoutMethod}
+                      activeClassName=""
+                      to="/"
+                      exact
+                    >
+                      logout
+                    </NavLink>
+                    {/* <NavLink className="dropdown-item" to="/">
+                      profile
+                    </NavLink>
+                    <NavLink
+                      className="dropdown-item"
+                      onClick={this.props.logoutMethod}
+                      to="/"
+                      exact
+                    >
+                      logout
+                    </NavLink> */}
+                  </div>
+                </li>
+              </React.Fragment>
+            )}
+
+            {/* if user is not authenticated navigation  */}
+            {!this.props.isAuthenticated && (
+              <React.Fragment>
+                <li class="nav-item">
+                  <NavLink className="nav-link" to="/signIn">
+                    signIn
+                  </NavLink>
+                </li>
+                <li class="nav-item">
+                  <NavLink className="nav-link" to="/signUp">
+                    signUp
+                  </NavLink>
+                </li>
+              </React.Fragment>
+            )}
           </ul>
         </div>
       </nav>

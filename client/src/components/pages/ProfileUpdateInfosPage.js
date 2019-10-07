@@ -1,21 +1,20 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { isEmpty } from "../../helpers/CustomValidators";
-class SignUpPage extends Component {
+import moment from "moment";
+class ProfileUpdateInfosPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      confirmationPassword: "",
-      firstName: "",
-      lastName: "",
-      gender: "male",
-      phoneNumber: "",
-      birthDate: "",
-      errors: {},
-      success: {}
+      firstName: this.props.user.firstName,
+      lastName: this.props.user.lastName,
+      gender: this.props.user.gender ? "male" : "female",
+      phoneNumber: this.props.user.phoneNumber,
+      birthDate: this.props.user.birthDate,
+      ...this.props.success
     };
+
+    console.log("pppp", props);
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
@@ -25,15 +24,11 @@ class SignUpPage extends Component {
     //console.log(e.currentTarget);
     this.setState({ [e.target.name]: e.target.value });
   }
-
   onFormSubmit(e) {
     e.preventDefault();
 
     axios
-      .post("api/auth/signUp", {
-        email: this.state.email,
-        password: this.state.password,
-        confirmationPassword: this.state.confirmationPassword,
+      .put("api/users/updateProfile", {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         gender: this.state.gender == "male" ? true : false,
@@ -41,11 +36,14 @@ class SignUpPage extends Component {
         ...(this.state.phoneNumber && { phoneNumber: this.state.phoneNumber })
       })
       .then(response => {
-        console.log(response);
-        this.setState({ success: response.data.success, errors: {} });
+        console.log(response.data);
+
+        this.props.updateUser(response.data.success.user, {
+          success: response.data.success,
+          error: {}
+        });
       })
       .catch(error => {
-        console.log(error.response);
         if (error.response) {
           const { errors } = error.response.data;
           this.setState({ errors: errors, success: {} });
@@ -55,7 +53,9 @@ class SignUpPage extends Component {
 
   render() {
     return (
-      <div style={{ margin: "30px auto", maxWidth: "400px" }}>
+      <div
+        style={{ margin: "50px auto", maxWidth: "400px", minHeight: "80vh" }}
+      >
         <form onSubmit={this.onFormSubmit}>
           <div className="form-group">
             <label>First name *</label>
@@ -71,7 +71,7 @@ class SignUpPage extends Component {
               onChange={this.onInputChange}
             />
             <div className="invalid-feedback">
-              {this.state.errors.firstName}
+              {this.state.errors && this.state.errors.firstName}
             </div>
           </div>
           <div className="form-group">
@@ -87,23 +87,9 @@ class SignUpPage extends Component {
               value={this.state.lastName}
               onChange={this.onInputChange}
             />
-            <div className="invalid-feedback">{this.state.errors.lastName}</div>
-          </div>
-
-          <div className="form-group">
-            <label>Email *</label>
-            <input
-              type="email"
-              name="email"
-              className={
-                this.state.errors && this.state.errors.email
-                  ? "form-control is-invalid"
-                  : "form-control"
-              }
-              value={this.state.email}
-              onChange={this.onInputChange}
-            />
-            <div className="invalid-feedback">{this.state.errors.email}</div>
+            <div className="invalid-feedback">
+              {this.state.errors && this.state.errors.lastName}
+            </div>
           </div>
           <div className="form-group">
             <label>phone Number (optional)</label>
@@ -119,7 +105,7 @@ class SignUpPage extends Component {
               onChange={this.onInputChange}
             />
             <div className="invalid-feedback">
-              {this.state.errors.phoneNumber}
+              {this.state.errors && this.state.errors.phoneNumber}
             </div>
           </div>
           <div className="form-group">
@@ -154,7 +140,6 @@ class SignUpPage extends Component {
               </label>
             </div>
           </div>
-
           <div className="form-group">
             <label>birth Date *</label>
             <input
@@ -165,61 +150,27 @@ class SignUpPage extends Component {
                   ? "form-control is-invalid"
                   : "form-control"
               }
-              value={this.state.birthDate}
+              value={moment(this.state.birthDate).format("YYYY-MM-DD")}
               onChange={this.onInputChange}
             />
             <div className="invalid-feedback">
-              {this.state.errors.birthDate}
+              {this.state.errors && this.state.errors.birthDate}
             </div>
           </div>
-          <div className="form-group">
-            <label>Password *</label>
-            <input
-              name="password"
-              type="password"
-              className={
-                this.state.errors && this.state.errors.password
-                  ? "form-control is-invalid"
-                  : "form-control"
-              }
-              id="password1"
-              value={this.state.password}
-              onChange={this.onInputChange}
-            />
-            <div className="invalid-feedback">{this.state.errors.password}</div>
-          </div>
-          <div className="form-group">
-            <label>Confirm password *</label>
-            <input
-              type="password"
-              className={
-                this.state.errors && this.state.errors.confirmationPassword
-                  ? "form-control is-invalid"
-                  : "form-control"
-              }
-              id="password2"
-              name="confirmationPassword"
-              value={this.state.confirmationPassword}
-              onChange={this.onInputChange}
-            />
-            <div className="invalid-feedback">
-              {this.state.errors.confirmationPassword}
-            </div>
-          </div>
-
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
-          {!isEmpty(this.state.errors) && (
-            <div
-              style={{ marginTop: "10px" }}
-              class="alert alert-danger"
-              role="alert"
-            >
-              form value(s) is (are) unvalid
-            </div>
-          )}
         </form>
+        {!isEmpty(this.state.errors) && (
+          <div
+            style={{ marginTop: "10px" }}
+            class="alert alert-danger"
+            role="alert"
+          >
+            form value(s) is (are) unvalid
+          </div>
+        )}
+
         {this.state.success && this.state.success.global && (
           <div
             class="alert alert-success"
@@ -234,4 +185,4 @@ class SignUpPage extends Component {
   }
 }
 
-export default SignUpPage;
+export default ProfileUpdateInfosPage;

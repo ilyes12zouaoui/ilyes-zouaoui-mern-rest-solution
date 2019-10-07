@@ -2,6 +2,9 @@ const router = require("express").Router();
 const authMiddleWares = require("../middlewaresAndValidators/authMiddleWares");
 const userValidators = require("../middlewaresAndValidators/userValidators");
 const userController = require("../controllers/usersController");
+const uploadFileMiddleWares = require("../middlewaresAndValidators/UploadFileMiddleWares");
+
+const uploadFileValidators = require("../middlewaresAndValidators/UploadFileValidators");
 
 //demoteUser,
 // banUser,
@@ -9,10 +12,30 @@ const userController = require("../controllers/usersController");
 // getUsers,
 // getUserById,
 //deleteUserById
+//updateProfileImage
+//updatepassword
+//updateProfile
+//router.use(authMiddleWares.authenticateAndLoadUser);
 
-router.use(
-  authMiddleWares.authenticateUserOnly,
-  authMiddleWares.authorisationForAdmin
+router.put(
+  "/updateProfile",
+  authMiddleWares.authenticateAndLoadUser,
+  userValidators.updateProfile,
+  userController.updateProfile
+);
+router.put(
+  "/updatePassword",
+  authMiddleWares.authenticateAndLoadUser,
+  userValidators.updatePassword,
+  userController.updatePassword
+);
+router.put(
+  "/updateProfileImage",
+  authMiddleWares.authenticateAndLoadUser,
+
+  uploadFileMiddleWares.uploadFileByName("image"),
+  uploadFileValidators.fileExistsValidator,
+  userController.updateProfileImage
 );
 
 router.put(

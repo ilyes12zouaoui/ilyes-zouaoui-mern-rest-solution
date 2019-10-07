@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { isEmpty } from "../../helpers/CustomValidators";
+import { Link } from "react-router-dom";
 class SignInPage extends Component {
   constructor(props) {
     super(props);
@@ -11,7 +12,7 @@ class SignInPage extends Component {
       success: {}
     };
 
-    console.log(props);
+    console.log("pppp", props);
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onSpanClick = this.onSpanClick.bind(this);
@@ -32,7 +33,8 @@ class SignInPage extends Component {
       })
       .then(response => {
         const { token, user } = response.data;
-        this.props.loginMethod(user.role, user, token);
+        console.log("hedha token :", token);
+        this.props.loginMethod(user, token);
         this.props.history.push("/");
         // this.setState({ errors: {} });
       })
@@ -63,7 +65,9 @@ class SignInPage extends Component {
 
   render() {
     return (
-      <div style={{ margin: "30px auto", maxWidth: "400px" }}>
+      <div
+        style={{ margin: "50px auto", maxWidth: "400px", minHeight: "80vh" }}
+      >
         <form onSubmit={this.onFormSubmit}>
           <div className="form-group">
             <label>Email *</label>
@@ -101,9 +105,16 @@ class SignInPage extends Component {
             Submit
           </button>
         </form>
+        <Link
+          to="/forgotPassword"
+          style={{ marginTop: "10px", display: "block" }}
+        >
+          forgot password ?
+        </Link>
+
         {this.state.errors.global && (
           <div
-            style={{ marginTop: "10px" }}
+            style={{ marginTop: "8px" }}
             class="alert alert-danger"
             role="alert"
           >

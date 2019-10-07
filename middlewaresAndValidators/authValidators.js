@@ -9,6 +9,7 @@ const joiErrorMessageChange = require("../helpers/JoiErrorMessageChange");
 // accountActivationValidator,
 // sendAccountActivationEmailValidator
 // resetPasswordValidator
+// resetPasswordEmailValidator
 //forgotPasswordValidator
 
 //----------------- signInValidator
@@ -93,12 +94,34 @@ const resendAccountActivationEmailValidator = (req, res, next) => {
 
 //----------- resetPasswordValidator
 const resetPasswordValidator = (req, res, next) => {
-  if (!isToken(req.params.token) || isEmpty(req.body.password))
+  if (!isToken(req.params.token))
     return res.status(400).send({
-      errors: { global: "wrong credentials" }
+      errors: { global: "invalid token !" }
     });
+  schema = {
+    password: Joi.string()
+      .max(50)
+      .min(5)
+      .required(),
+    confirmationPassword: Joi.string()
+      .valid(Joi.ref("password"))
+      .required()
+      .options({
+        language: {
+          any: {
+            allowOnly: "do not match"
+          }
+        }
+      })
+  };
 
-  next();
+  const result = Joi.validate(req.body, schema, { abortEarly: false });
+
+  const errors = joiErrorMessageChange(result);
+
+  if (errors) return res.status(400).send({ errors: errors });
+
+  return next();
 };
 
 //----------- forgotPasswordValidator

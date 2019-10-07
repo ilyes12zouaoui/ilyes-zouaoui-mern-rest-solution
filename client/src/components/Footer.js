@@ -54,8 +54,8 @@ class Footer extends Component {
         <div class="modal" id="myModal">
           <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-body" style={{ color: "grey" }}>
-                my email address : ilyes.zouaoui@esprit.tn
+              <div class="modal-body text-center" style={{ color: "black" }}>
+                <h3>my email address : ilyes.zouaoui@esprit.tn</h3>
               </div>
 
               <div class="modal-footer">

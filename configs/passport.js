@@ -13,7 +13,6 @@ module.exports = passport => {
   passport.use(
     "jwt-load-user",
     new JwtStrategy(passportJwtOptions, async function(jwt_payload, done) {
-      console.log(jwt_payload);
       const user = await userModel
         .findOne({
           _id: jwt_payload.id
@@ -31,7 +30,6 @@ module.exports = passport => {
   passport.use(
     "jwt-only",
     new JwtStrategy(passportJwtOptions, async function(jwt_payload, done) {
-      console.log("wsil");
       if (jwt_payload) {
         return done(null, jwt_payload);
       } else {
